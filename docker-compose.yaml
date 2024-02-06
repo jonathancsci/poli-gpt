@@ -4,3 +4,33 @@ services:
     build: ./db
   volumes:
     - poli_gpt_data:/var/lib/postgresql/data
+  enviroment:
+    POSTGRES_NAME: ${POSTGRES_NAME}
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  ports:
+    - "5432:5432"
+  
+  web:
+    build: ./web
+    volumes:
+      - ./web:/app
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+
+  ml:
+    build: ./ml
+    volumes:
+      - ./ml:/app
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    ports:
+      - "8001:80"
+    depends_on:
+      - db
+
+volumes:
+  poli_gpt_data:
