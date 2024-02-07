@@ -1,0 +1,14 @@
+# scrape
+python-dotenv
+requests
+beautifulsoup4
+
+# web
+fastapi
+uvicorn[standard]
+annoy
+
+# ml
+torch
+transformers
+sentence-transformers
