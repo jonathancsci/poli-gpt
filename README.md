@@ -17,6 +17,6 @@ pip install -r requirements.txt
 # this deactivates the enviroment
 deactivate
 ```
-4. Open the command palatte (shift + command/ctrl + p) and type "Python: Select Interpreter"
+4. Open the command palette (shift + command/ctrl + p) and type "Python: Select Interpreter" and select it.
 5. Select the venv
 6. Restart VS Code

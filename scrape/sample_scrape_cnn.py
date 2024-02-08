@@ -22,8 +22,6 @@ article_text = '\n\n'.join(paragraph.get_text(strip=True) for paragraph in artic
 
 file_path = 'cnn_article.txt'
 
-# Delay a random number of seconds between 3-10
-
 with open(file_path, 'w') as file:
     file.write(article_text)
 
