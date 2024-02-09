@@ -1,3 +1,4 @@
 .env
 venv
 poli-gpt-venv
+gcp_key.json
