@@ -5,23 +5,6 @@ from bs4 import BeautifulSoup
 import http.client, urllib.parse
 from dotenv import load_dotenv
 import time
-import urllib.request
-import urllib.error
-
-# def uptime_bot(url):
-#     while True:
-#         try:
-#             conn = urllib.request.urlopen(url)
-#         except urllib.error.HTTPError as e:
-#             # Email admin / log
-#             print(f'HTTPError: {e.code} for {url}')
-#         except urllib.error.URLError as e:
-#             # Email admin / log
-#             print(f'URLError: {e.code} for {url}')
-#         else:
-#             # Website is up
-#             print(f'{url} is up')
-#         time.sleep(60)
 
 load_dotenv()
 
@@ -49,12 +32,6 @@ data = res.read()
 
 # Parse the JSON response
 response_json = json.loads(data)
-# for article in response_json.get('data',[]):
-#     print(article['uuid'])
-
-# Extract URLs from the data object
-# urls = [article['url'] for article in response_json.get('data', [])]
-# print(urls)
 
 # Loop through each article in the response
 for article in response_json.get('data', []):
