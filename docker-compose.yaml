@@ -1,36 +1,28 @@
 version: '3.8'
 services:
   db:
-    build: ./db
-  volumes:
-    - poli_gpt_data:/var/lib/postgresql/data
-  enviroment:
-    POSTGRES_NAME: ${POSTGRES_NAME}
-    POSTGRES_USER: ${POSTGRES_USER}
-    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  ports:
-    - "5432:5432"
-  
-  web:
-    build: ./web
+    image: postgres:16
     volumes:
-      - ./web:/app
-    ports:
-      - "8000:80"
-    depends_on:
-      - db
-
-  ml:
-    build: ./ml
-    volumes:
-      - ./ml:/app
+      - poli_gpt_data:/var/lib/postgresql/data
     environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+  
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend/app:/backend/app
+      - ./frontend:/frontend/
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "8001:80"
+      - "80:80"
     depends_on:
       - db
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
 
 volumes:
   poli_gpt_data:

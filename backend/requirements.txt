@@ -1,6 +1,7 @@
 fastapi
 uvicorn[standard]
-
-torch
+sqlalchemy
+psycopg2-binary
+annoy
 transformers
 sentence-transformers

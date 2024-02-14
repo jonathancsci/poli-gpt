@@ -4,12 +4,12 @@ requests
 beautifulsoup4
 google-cloud-storage
 
-# web
+# app
 fastapi
 uvicorn[standard]
+sqlalchemy
+psycopg2-binary
 annoy
-
-# ml
 torch
 transformers
 sentence-transformers
