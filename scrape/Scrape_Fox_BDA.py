@@ -87,7 +87,7 @@ def save_to_text_file(file_name, data):
 
 
 def main():
-    API_KEY = "wZG6eUaccutqpaWJlSHa986xstvsNiP8jtOGlIDx"
+    API_KEY = ""
     if not API_KEY:
         print("API_KEY is not set. Please check your .env file.")
         return
