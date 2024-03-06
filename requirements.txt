@@ -1,7 +1,5 @@
-# scrape
+# data
 python-dotenv
-requests
-beautifulsoup4
 google-cloud-storage
 eventregistry
 
@@ -10,7 +8,5 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 psycopg2-binary
-annoy
 torch
 transformers
-sentence-transformers

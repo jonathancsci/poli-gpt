@@ -4,7 +4,7 @@
 # In[1]:
 
 
-#!pip install eventregistry
+# !pip install eventregistry
 
 
 # In[2]:
@@ -16,7 +16,6 @@ from datetime import datetime, timedelta
 from google.cloud import storage
 from dotenv import load_dotenv
 import json
-
 
 # In[ ]:
 
@@ -53,16 +52,14 @@ def save_to_gcp_bucket(bucket_name, file_name, data):
 
 
 # Initialize EventRegistry
-YOUR_API_KEY = "your_api_key_here"  
-er = EventRegistry(apiKey = YOUR_API_KEY)
-
+YOUR_API_KEY = os.getenv("NEWSAPI_AI_KEY")
+er = EventRegistry(apiKey=YOUR_API_KEY)
 
 # In[6]:
 
 
 # GCP Bucket Name
 BUCKET_NAME = "fox_newsapi_ai_data"
-
 
 # In[7]:
 
@@ -73,28 +70,29 @@ for date in generate_last_month_dates():
     print(f"Fetching articles for {formatted_date}")
 
     query = {
-      "$query": {
-        "$and": [
-          {
-            "categoryUri": "dmoz/News/Politics"
-          },
-          {
-            "sourceUri": "foxnews.com"
-          },
-          {
-            "dateStart": formatted_date,
-            "dateEnd": formatted_date,
-            "lang": "eng"
-          }
-        ]
-      },
-      "$filter": {
-        "isDuplicate": "skipDuplicates"
-      }
+        "$query": {
+            "$and": [
+                {
+                    "categoryUri": "news/Politics"
+                },
+                {
+                    "sourceUri": "foxnews.com"
+                },
+                {
+                    "dateStart": formatted_date,
+                    "dateEnd": formatted_date,
+                    "lang": "eng"
+                }
+            ]
+        },
+        "$filter": {
+            "isDuplicate": "skipDuplicates"
+        }
     }
 
     q = QueryArticlesIter.initWithComplexQuery(query)
-    for article in q.execQuery(er, maxItems=100):
-        file_name = f"foxnews_{formatted_date}_{article['uuid']}.json"
+    articles1 = q.execQuery(er, maxItems=100)
+    for article in articles1:
+        print(article)
+        file_name = f"foxnews_{formatted_date}_{article['uri']}.json"
         save_to_gcp_bucket(BUCKET_NAME, file_name, article)
-
