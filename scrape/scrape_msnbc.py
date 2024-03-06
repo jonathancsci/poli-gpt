@@ -26,7 +26,7 @@ bucket_name = 'news-data-poligpt'
 bucket = storage_client.bucket(bucket_name)
 
 start_date = datetime.today()
-num_days = 70  # For example, go back 10 days
+num_days = 2  # For example, go back 10 days
 dates_list = []
 for i in range(num_days):
     # Calculate the date to iterate

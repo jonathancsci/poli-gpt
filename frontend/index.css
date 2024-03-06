@@ -1,0 +1,18 @@
+body {
+    color: black;
+    background-color: dimgray;
+}
+
+.navbar-collapse {
+    margin-top: 24px;
+    padding-top: 12px;
+}
+
+#chat-box {
+    color: chartreuse;
+    margin: 50px auto auto;
+}
+
+card {
+    align-self: center;
+}
