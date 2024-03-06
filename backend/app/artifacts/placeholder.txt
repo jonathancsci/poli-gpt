@@ -1,0 +1,1 @@
+Model artifacts go in the directory, which are gitignored.
