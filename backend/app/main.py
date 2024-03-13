@@ -21,7 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/js", StaticFiles(directory="../frontend/js"), name="js")
+#app.mount("/js", StaticFiles(directory="../frontend/js"), name="js")
+app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
 
 @app.get("/")
 def serve_root():
