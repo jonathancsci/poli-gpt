@@ -1,5 +1,10 @@
 # PoliGPT
 
+## set up WSL 
+1. Make sure python and pip are updated, if not run the below commands-
+- sudo apt-get update
+- sudo apt-get upgrade  #Optional
+- sudo apt install python3-pip
 ## Set up the enviroment
 1. Make sure you are in the root directory
 2. Create a .env file
