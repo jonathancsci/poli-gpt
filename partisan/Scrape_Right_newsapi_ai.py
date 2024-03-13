@@ -31,7 +31,7 @@ load_dotenv()
 # Function to generate dates for the last month
 def generate_last_month_dates():
     end_date = datetime.now()
-    start_date = end_date - timedelta(days=1)
+    start_date = end_date - timedelta(days=30)
     delta = end_date - start_date
     return [start_date + timedelta(days=i) for i in range(delta.days + 1)]
 
@@ -45,7 +45,7 @@ def save_to_gcp_bucket(bucket_name, file_name, data):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(file_name)
-    blob.upload_from_string(json.dumps(data, content_type='application/json'))
+    blob.upload_from_string(json.dumps(data))
     print(f"Data saved to {file_name} in bucket {bucket_name}")
 
 
@@ -53,7 +53,7 @@ def save_to_gcp_bucket(bucket_name, file_name, data):
 
 
 # Initialize EventRegistry
-YOUR_API_KEY = "c5126a6e-03af-40f6-822a-866a29b00eac"  
+YOUR_API_KEY = os.getenv("NEWSAPI_AI_KEY")
 er = EventRegistry(apiKey = YOUR_API_KEY)
 
 
@@ -61,48 +61,34 @@ er = EventRegistry(apiKey = YOUR_API_KEY)
 
 
 # GCP Bucket Name
-BUCKET_NAME = "fox_newsapi_ai_data"
+BUCKET_NAME = "right_news_data"
+# Sources to iterate over
+sources = ["ccn.com", "washingtontimes.com"]
 
 
-# In[8]:
+# In[10]:
 
 
 # Iterate over dates for the last month
 for date in generate_last_month_dates():
     formatted_date = date.strftime('%Y-%m-%d')
-    print(f"Fetching articles for {formatted_date}")
-
-    query = {
-      "$query": {
-        "$and": [
-          {
-            "categoryUri": "dmoz/News/Politics"
-          },
-          {
-            "sourceUri": "foxnews.com"
-          },
-          {
-            "dateStart": formatted_date,
-            "dateEnd": formatted_date,
-            "lang": "eng"
-          }
-        ]
-      },
-      "$filter": {
-        "isDuplicate": "skipDuplicates",
-        "dataType": [
-                "news",
-                "pr",
-                "blog"
+    for source in sources:
+        print(f"Fetching articles from {source} for {formatted_date}")
+        query = {
+          "$query": {
+            "$and": [
+              {"categoryUri": "news/Politics"},
+              {"sourceUri": er.getSourceUri(source)},  # Dynamically setting sourceUri
+              {"dateStart": formatted_date, "dateEnd": formatted_date, "lang": "eng"}
             ]
-      }
-    }
-    
-    q = QueryArticlesIter.initWithComplexQuery(query)
-    for article in q.execQuery(er, maxItems=100):
-        print(article)
-        file_name = f"foxnews_{formatted_date}_{article['uri']}.json"
-        save_to_gcp_bucket(BUCKET_NAME, file_name, article)
-        print(f'Data uploaded to {bucket_name}/fox_{uri}.json')
-        save_to_gcp_bucket(BUCKET_NAME, file_name, article)
+          },
+          "$filter": {"dataType": ["news", "pr", "blog"]}
+        }
+
+        q = QueryArticlesIter.initWithComplexQuery(query)
+        for article in q.execQuery(er, maxItems=100):
+            print(article)  
+            file_name = f"{source}_{formatted_date}_{article['uri']}.json".replace('www.', '')  
+            #save_to_gcp_bucket(BUCKET_NAME, file_name, article)
+            print(f'Data uploaded to {BUCKET_NAME}/{file_name}')
 
