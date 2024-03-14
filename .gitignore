@@ -7,3 +7,5 @@ __pycache__
 gpt2_default
 gpt2_tokenizer_fast
 all-MiniLM-L6-v2
+conservative_news_articles.csv
+liberal_news_articles.csv

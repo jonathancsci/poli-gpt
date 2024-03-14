@@ -2,7 +2,10 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from .data.init_db import init_db
 from .routers import generate, search
+
+init_db()
 
 app = FastAPI()
 app.include_router(generate.router)
