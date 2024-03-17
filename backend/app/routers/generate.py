@@ -6,7 +6,8 @@ import torch
 from transformers import GPT2TokenizerFast, GPT2LMHeadModel
 
 tokenizer_path = '/backend/app/artifacts/gpt2_tokenizer_fast'
-model_path = '/backend/app/artifacts/gpt2_default'
+conservative_model_path = '/backend/app/artifacts/conservative-gpt2'
+liberal_model_path = '/backend/app/artifacts/liberal-gpt2'
 
 if not os.path.exists(tokenizer_path):
     tokenizer = GPT2TokenizerFast.from_pretrained('gpt2')
@@ -14,18 +15,17 @@ if not os.path.exists(tokenizer_path):
 else:
     tokenizer = GPT2TokenizerFast.from_pretrained(tokenizer_path)
 
-if not os.path.exists(model_path):
-    model = GPT2LMHeadModel.from_pretrained('gpt2')
-    model.save_pretrained(model_path)
+if not os.path.exists(conservative_model_path):
+    conservative_model = GPT2LMHeadModel.from_pretrained('jonathancsci/conservative-gpt2')
+    conservative_model.save_pretrained(conservative_model_path)
 else:
-    model = GPT2LMHeadModel.from_pretrained(model_path)
+    conservative_model = GPT2LMHeadModel.from_pretrained(conservative_model_path)
 
-TEMPRATURE = 0.7
-PENALTY_ALPHA = 0.75
-TOP_K = 50
-TOP_P = 0.95
-DO_SAMPLE = True
-PAD_TOKEN_ID = tokenizer.eos_token_id
+if not os.path.exists(liberal_model_path):
+    liberal_model = GPT2LMHeadModel.from_pretrained('jonathancsci/liberal-gpt2')
+    liberal_model.save_pretrained(liberal_model_path)
+else:
+    liberal_model = GPT2LMHeadModel.from_pretrained(liberal_model_path)
 
 class Prompt(BaseModel):
     text: str = " "
@@ -50,31 +50,35 @@ router = APIRouter(prefix='/generate')
 def generate(prompt: Prompt):
     encoded_input = tokenizer(prompt.text, return_tensors="pt")
 
-    output_sequences_conservative = model.generate(
+    output_sequences_conservative = conservative_model.generate(
         input_ids=encoded_input['input_ids'],
         max_length=prompt.response_length,
-        temperature=TEMPRATURE,
-        penalty_alpha=PENALTY_ALPHA,
-        top_k=TOP_K,
-        top_p =TOP_P,
-        do_sample=DO_SAMPLE,
-        pad_token_id=PAD_TOKEN_ID,
+        temperature=0.7,
+        top_k=55,
+        top_p=0.95,
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id,
+        repetition_penalty=1.015,
+        no_repeat_ngram_size=6,
         )
 
-    output_sequences_liberal = model.generate(
+    output_sequences_liberal = liberal_model.generate(
         input_ids=encoded_input['input_ids'],
         max_length=prompt.response_length,
-        temperature=TEMPRATURE,
-        penalty_alpha=PENALTY_ALPHA,
-        top_k=TOP_K,
-        top_p =TOP_P,
-        do_sample=DO_SAMPLE,
-        pad_token_id=PAD_TOKEN_ID,
+        temperature=0.7,
+        top_k=50,
+        top_p=0.9,
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id,
+        repetition_penalty=1.01,
+        no_repeat_ngram_size=6,
         )
     
+    # Response with the prompt
     generated_text_conservative = tokenizer.decode(output_sequences_conservative[0], skip_special_tokens=True)
     generated_text_liberal = tokenizer.decode(output_sequences_liberal[0], skip_special_tokens=True)
 
+    # Strip the prompt from each response
     conservative_response = generated_text_conservative[len(tokenizer.decode(encoded_input['input_ids'][0], skip_special_tokens=True)):].strip()
     liberal_response = generated_text_liberal[len(tokenizer.decode(encoded_input['input_ids'][0], skip_special_tokens=True)):].strip()
 
