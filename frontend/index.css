@@ -13,6 +13,12 @@ body {
     margin: 50px auto auto;
 }
 
-card {
-    align-self: center;
+#Liberal {
+    color: dodgerblue;
+    background-color: dodgerblue;
+}
+
+#Conservative {
+    color: red;
+    background-color: red;
 }

@@ -28,19 +28,21 @@ async function fetchAPIAndDisplayResult(inputText, num_articles) {
         const data = await response.json();
 
         // Clear existing accordion items
-        document.getElementById('accordionExample').innerHTML = '';
+        document.getElementById('liberalAccordionCol').innerHTML = '';
+        document.getElementById('conservativeAccordionCol').innerHTML = '';
 
         // Display the responses in accordion format
-        const accordionExample = document.getElementById('accordionExample');
+        const liberal_Accordion = document.getElementById('liberalAccordionCol');
+        const conservative_Accordion = document.getElementById('conservativeAccordionCol');
 
         if (data.liberal.length > 0) {
             const liberalAccordion = createAccordion(data.liberal, 'Liberal');
-            accordionExample.appendChild(liberalAccordion);
+            liberal_Accordion.appendChild(liberalAccordion);
         }
 
         if (data.conservative.length > 0) {
             const conservativeAccordion = createAccordion(data.conservative, 'Conservative');
-            accordionExample.appendChild(conservativeAccordion);
+            conservative_Accordion.appendChild(conservativeAccordion);
         }
     } catch (error) {
         console.error('There has been a problem with the fetch:', error);
@@ -50,6 +52,8 @@ async function fetchAPIAndDisplayResult(inputText, num_articles) {
 function createAccordion(articles, category) {
     const accordion = document.createElement('div');
     accordion.className = 'accordion';
+    accordion.id = category
+
 
     articles.forEach((article, index) => {
         const accordionItem = document.createElement('div');
