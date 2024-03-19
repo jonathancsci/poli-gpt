@@ -73,12 +73,9 @@ async def search_articles(query: Query, db=Depends(get_db)):
     if not liberal_articles and not conservative_articles:
         raise HTTPException(status_code=404, detail="Articles not found")
 
+
     return SearchResult(
         liberal=[Article(headline=article.headline, body=article.body, url=article.url) for article in liberal_articles],
         conservative=[Article(headline=article.headline, body=article.body, url=article.url) for article in conservative_articles]
     )
-
-@router.get('/')
-def serve_search():
-    return {'text': 'not implemented yet'}
 
