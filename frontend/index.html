@@ -27,32 +27,24 @@
                 <ul class="dropdown-menu" style="text-align: center">
                     <li><a class="dropdown-item" href="index.html">Home</a></li>
                     <li><a class="dropdown-item" href="search.html">Search</a></li>
-                    <li><a class="dropdown-item" href="data.html">Data</a></li>
-
-
                 </ul>
             </a>
         </div>
     </nav>
-    <div id="chat-box-div" style="text-align: center">
-        <label for="button-addon2">
-            <div class="input-group mb-3" id="chat-box">
-                <input type="text" class="form-control" placeholder="Ask Poli-GPT something"
-                       aria-label="Ask Poli-GPT something" aria-describedby="button-addon2">
-                <input type="number" class="form-control" id="responseLength" placeholder="Response Length" value="100"
-                       min="1" style="max-width: 150px;">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Submit</button>
-            </div>
-        </label>
 
-    </div>
     <div class="container">
+        <div class="search-container" id="chat-box">
+            <input type="text" id="search-input" placeholder="Generate">
+            <input type="number" id="response-length" placeholder="Response Length">
+            <button class="btn btn-outline-secondary" type="button" id="search-button">Search</button>
+            <div id="spinner" class="spinner"></div>
+        </div>
         <div class="row row-cols-2 g-4">
             <div class="col">
                 <div class="card border-primary mb-3 text-bg-dark custom-card-width">
                     <div class="card-body">
                         <p class="card-text" style="color: dodgerblue" id="LiberalPrompt"></p>
-                        <p class="card-text" id="LiberalResponse">GPT response placeholder Liberal</p>
+                        <p class="card-text" id="LiberalResponse"></p>
                     </div>
                 </div>
             </div>
@@ -61,11 +53,12 @@
                     <div class="card-body">
 
                         <p class="card-text" style="color: firebrick" id="ConservativePrompt"></p>
-                        <p class="card-text" id="ConservativeResponse">GPT response placeholder Conservative</p>
+                        <p class="card-text" id="ConservativeResponse"></p>
                     </div>
                 </div>
             </div>
         </div>
+        <div id="errorMessage" style="color: red; display: none;">Error: Input must be at least 5 characters long.</div>
     </div>
 
 

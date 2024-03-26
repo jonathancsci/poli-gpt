@@ -39,7 +39,4 @@ def serve_root():
 def serve_root():
     return FileResponse('../frontend/search.html')
 
-@app.get("/data.html")
-def serve_root():
-    return FileResponse('../frontend/data.html')
 
