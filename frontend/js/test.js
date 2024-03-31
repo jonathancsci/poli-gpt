@@ -1,5 +1,3 @@
-console.log("hello");
-
 function initializeApp() {
 
     document.getElementById("search-button").addEventListener("click", function () {
