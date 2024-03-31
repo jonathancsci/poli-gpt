@@ -39,9 +39,9 @@ class Prompt(BaseModel):
         return text
 
     @validator('response_length')
-    def response_length_less_than_200(cls, value):
-        if value > 200:
-            raise ValueError('Reponse length must be less than 200 tokens')
+    def response_length_less_than_512(cls, value):
+        if value >= 512:
+            raise ValueError('Reponse length must be less than 512 tokens')
         return value
 
 router = APIRouter(prefix='/generate')
