@@ -16,13 +16,3 @@ app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
 @app.get("/")
 def serve_root():
     return FileResponse('../frontend/index.html')
-
-@app.get("/index.html")
-def serve_root():
-    return FileResponse('../frontend/index.html')
-
-@app.get("/search.html")
-def serve_root():
-    return FileResponse('../frontend/search.html')
-
-

@@ -1,6 +1,7 @@
 import os
 from typing import List
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
@@ -79,3 +80,6 @@ async def search_articles(query: Query, db=Depends(get_db)):
         conservative=[Article(headline=article.headline, body=article.body, url=article.url) for article in conservative_articles]
     )
 
+@router.get("/")
+def serve_search():
+    return FileResponse('../frontend/search.html')
