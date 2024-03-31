@@ -29,7 +29,7 @@ async function fetchAPIAndDisplayResult(inputText, responseLength) {
     const spinner = document.getElementById("spinner");
     spinner.style.display = "block";
     try {
-        const response = await fetch('http://localhost/generate/', {
+        const response = await fetch('/generate/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

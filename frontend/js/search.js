@@ -15,7 +15,7 @@ async function fetchAPIAndDisplayResult(inputText, num_articles) {
     };
 
     try {
-        const response = await fetch('http://localhost/search/', {
+        const response = await fetch('/search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
