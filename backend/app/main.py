@@ -10,8 +10,7 @@ app = FastAPI()
 app.include_router(generate.router)
 app.include_router(search.router)
 
-#app.mount("/js", StaticFiles(directory="../frontend/js"), name="js")
-app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
+app.mount("/static", StaticFiles(directory="../frontend/static"), name="static")
 
 @app.get("/")
 def serve_root():
