@@ -6,6 +6,15 @@ body {
 .navbar-collapse {
     margin-top: 24px;
     padding-top: 12px;
+    color: #ffffff;
+}
+
+.dropdown-menu{
+    background-color: #424242;
+}
+
+.dropdown-item{
+    color:white;
 }
 
 #chat-box {
@@ -59,7 +68,7 @@ body {
     margin: 5px;
     border-radius: 5px;
     border: none;
-    background-color: #007bff;
+    background-color: #424242;
     color: white;
     font-size: 16px;
     cursor: pointer;
@@ -67,7 +76,7 @@ body {
 
 
 #search-button:hover {
-  background-color: #0056b3;
+  background-color: #757575;
 }
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
