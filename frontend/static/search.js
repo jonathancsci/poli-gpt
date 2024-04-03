@@ -1,18 +1,37 @@
 console.log("hello");
+
 function initializeApp() {
 
-    document.getElementById("button-addon2").addEventListener("click", function() {
-        const userInput = document.querySelector("input[type='text']").value;
-        const num_articles = document.getElementById("responseLength").value;
-        fetchAPIAndDisplayResult(userInput, num_articles);
+    document.getElementById("search-button").addEventListener("click", function () {
+        const userInput = document.getElementById("search-input").value;
+        const responseLength = document.getElementById("response-length").value;
+        console.log("Inputs: ", userInput, ", ", responseLength)
+        validateInputLength(userInput)
+        fetchAPIAndDisplayResult(userInput, responseLength);
     });
 }
 
+function validateInputLength(userInput) {
+    if (userInput.length < 3) {
+        errorMessage.style.display = "block";
+        throw new Error('Input not long enough.');
+    } else {
+        errorMessage.style.display = "none";
+    }
+}
+
 async function fetchAPIAndDisplayResult(inputText, num_articles) {
+    if (!num_articles) {
+        num_articles = 3;
+    }
+    const spinner = document.getElementById("spinner");
+    spinner.style.display = "block";
+
     const prompt = {
         text: inputText,
         num_articles: parseInt(num_articles, 10)
     };
+    console.log("1", prompt)
 
     try {
         const response = await fetch('/search/', {
@@ -26,6 +45,8 @@ async function fetchAPIAndDisplayResult(inputText, num_articles) {
         if (!response.ok) throw new Error('Network response was not ok.');
 
         const data = await response.json();
+
+        spinner.style.display = "none";
 
         // Clear existing accordion items
         document.getElementById('liberalAccordionCol').innerHTML = '';
