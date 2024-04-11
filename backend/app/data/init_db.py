@@ -37,7 +37,6 @@ def init_db():
                     conn.commit()
         else:
             print(f"Table {table} already contains data. Pass.")
-            print(file_path)
 
     cur.close()
     conn.close()
