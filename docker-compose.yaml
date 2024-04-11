@@ -23,7 +23,7 @@ services:
       - "80:80"
     depends_on:
       - db
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
     deploy:
       resources:
         reservations:
@@ -31,5 +31,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+
 volumes:
   poli_gpt_data:
