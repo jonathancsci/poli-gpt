@@ -27,6 +27,11 @@ if not os.path.exists(liberal_model_path):
 else:
     liberal_model = GPT2LMHeadModel.from_pretrained(liberal_model_path)
 
+conservative_model = conservative_model.to('cuda')
+conservative_model.eval()
+liberal_model = liberal_model.to('cuda')
+liberal_model.eval()
+
 class Prompt(BaseModel):
     text: str = " "
     response_length: int = 25
@@ -48,39 +53,41 @@ router = APIRouter(prefix='/generate')
 
 @router.post('/')
 def generate(prompt: Prompt):
-    encoded_input = tokenizer(prompt.text, return_tensors="pt")
+    encoded_input = tokenizer(prompt.text, return_tensors="pt").to('cuda')
 
-    output_sequences_conservative = conservative_model.generate(
-        input_ids=encoded_input['input_ids'],
-        max_length=prompt.response_length,
-        temperature=0.7,
-        top_k=55,
-        top_p=0.95,
-        do_sample=True,
-        pad_token_id=tokenizer.eos_token_id,
-        repetition_penalty=1.015,
-        no_repeat_ngram_size=6,
-        )
+    with torch.no_grad():
+        output_sequences_conservative = conservative_model.generate(
+            input_ids=encoded_input['input_ids'],
+            max_length=prompt.response_length,
+            temperature=0.7,
+            top_k=55,
+            top_p=0.95,
+            do_sample=True,
+            pad_token_id=tokenizer.eos_token_id,
+            repetition_penalty=1.015,
+            no_repeat_ngram_size=6,
+            )
 
-    output_sequences_liberal = liberal_model.generate(
-        input_ids=encoded_input['input_ids'],
-        max_length=prompt.response_length,
-        temperature=0.7,
-        top_k=50,
-        top_p=0.9,
-        do_sample=True,
-        pad_token_id=tokenizer.eos_token_id,
-        repetition_penalty=1.01,
-        no_repeat_ngram_size=6,
-        )
+        output_sequences_liberal = liberal_model.generate(
+            input_ids=encoded_input['input_ids'],
+            max_length=prompt.response_length,
+            temperature=0.7,
+            top_k=50,
+            top_p=0.9,
+            do_sample=True,
+            pad_token_id=tokenizer.eos_token_id,
+            repetition_penalty=1.01,
+            no_repeat_ngram_size=6,
+            )
     
     # Response with the prompt
     generated_text_conservative = tokenizer.decode(output_sequences_conservative[0], skip_special_tokens=True)
     generated_text_liberal = tokenizer.decode(output_sequences_liberal[0], skip_special_tokens=True)
 
     # Strip the prompt from each response
-    conservative_response = generated_text_conservative[len(tokenizer.decode(encoded_input['input_ids'][0], skip_special_tokens=True)):].strip()
-    liberal_response = generated_text_liberal[len(tokenizer.decode(encoded_input['input_ids'][0], skip_special_tokens=True)):].strip()
+    prompt_length = len(tokenizer.decode(encoded_input['input_ids'][0], skip_special_tokens=True))
+    conservative_response = generated_text_conservative[prompt_length:].strip()
+    liberal_response = generated_text_liberal[prompt_length:].strip()
 
     return {
         'prompt': prompt.text,
