@@ -1,6 +1,5 @@
 .env
 venv
-poli-gpt-venv
 gcp_key.json
 __pycache__
 .DS_Store
