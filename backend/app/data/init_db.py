@@ -25,9 +25,9 @@ def init_db():
                 reader = csv.DictReader(csvfile)
 
                 for row in reader:
-                    headline = row['HeadLine']
-                    body = row['Body']
-                    url = row['URL']
+                    headline = row['headline']
+                    body = row['body']
+                    url = row['url']
                     
                     cur.execute(
                         f'INSERT INTO {table} (headline, body, url) VALUES (%s, %s, %s)',

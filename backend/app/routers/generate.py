@@ -95,7 +95,7 @@ def generate(prompt: Prompt):
         'liberal': liberal_response
     }
 
-@router.get('/test_device')
+@router.get('/test-device')
 def test_device():
     if torch.cuda.is_available():
         device = 'cuda'
