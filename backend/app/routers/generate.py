@@ -27,9 +27,7 @@ if not os.path.exists(liberal_model_path):
 else:
     liberal_model = GPT2LMHeadModel.from_pretrained(liberal_model_path)
 
-conservative_model = conservative_model.to('cuda')
 conservative_model.eval()
-liberal_model = liberal_model.to('cuda')
 liberal_model.eval()
 
 class Prompt(BaseModel):
@@ -53,7 +51,7 @@ router = APIRouter(prefix='/generate')
 
 @router.post('/')
 def generate(prompt: Prompt):
-    encoded_input = tokenizer(prompt.text, return_tensors="pt").to('cuda')
+    encoded_input = tokenizer(prompt.text, return_tensors="pt")
 
     with torch.no_grad():
         output_sequences_conservative = conservative_model.generate(
